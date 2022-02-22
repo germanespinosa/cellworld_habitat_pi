@@ -3,8 +3,6 @@ from time import sleep
 from os import path
 from gpiozero import Button
 from pi_messages import *
-import json
-
 
 class Doors:
     def __init__(self):
@@ -243,6 +241,3 @@ class Doors:
                 self.open_sensor_pin.append('')
                 self.close_sensor_pin.append('')
                 self.detected.append(False)
-
-# singleton_door =  Doors()
-# singleton_door.close_door(1)

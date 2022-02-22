@@ -1,6 +1,3 @@
-import doors as door
-import feeder
-from time import sleep
 from tcp_messages import MessageServer, Message
 import socket
 from pi_messages import *
@@ -33,7 +30,6 @@ class PiService(MessageServer):
         return f"opened door{door_num}"
 
     def close_door(self, door_num) -> str:
-        #include check to see if door exists
         print(f"closing {door_num}")
         self.door_thread = start_new_thread(self.experiment.doors.close_door, (door_num,))
         return f"closed door{door_num}"

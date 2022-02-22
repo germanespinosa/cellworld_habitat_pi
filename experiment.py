@@ -1,8 +1,6 @@
 import doors as door
 import feeder
 from time import sleep
-from tcp_messages import MessageServer, MessageClient, Message, Connection
-from json_cpp import JsonObject, JsonList
 from _thread import start_new_thread
 import socket
 from os import path
@@ -106,4 +104,4 @@ class Experiment:
             print('\tclosing door 3')
             self.doors.close_door(3)
             sleep(.2)
-        return 
+        return

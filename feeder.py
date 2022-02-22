@@ -1,10 +1,5 @@
-import os
 from gpiozero import Button, LED
 from time import sleep
-import requests 
-from _thread import start_new_thread
-from os import path
-from tcp_messages import MessageServer, MessageClient, Message, Connection
 
 def feeder_process(feeder, experiment, client):
     feeder.active = False
