@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/pi/maze_pi
+python3 /home/pi/maze_pi/maze-terminal2.py &
