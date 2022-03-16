@@ -7,7 +7,6 @@ def feeder_process(feeder, experiment, client):
         while not feeder.active:
             pass
         print ("\tfeeder enabled")
-        feeder.active = False
         while True: #wait until the mouse touches the feeder
             if feeder.sensor.is_pressed:
                 feeder.feed()
@@ -60,7 +59,6 @@ class Feeder:
         self.solenoid.on()
         sleep(feeding_time)
         self.solenoid.off()
-
 
     def cancel(self):
         self.active = False
