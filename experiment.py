@@ -1,6 +1,8 @@
 import doors as door
 import feeder
 from time import sleep
+from tcp_messages import MessageServer, MessageClient, Message, Connection
+from json_cpp import JsonObject, JsonList
 from _thread import start_new_thread
 import socket
 from os import path
@@ -11,8 +13,8 @@ class Experiment:
         print(self.pi_name)
         self.feed_time = 0
         self.feeder_number = 0
-        if path.exists("feeder.cal"):
-            with open("feeder.cal", "r") as f:
+        if path.exists("/home/pi/cellworld_habitat_pi/feeder.cal"):
+            with open("/home/pi/cellworld_habitat_pi/feeder.cal", "r") as f:
                 lines = f.readlines()
                 self.feed_time = float(lines[0].replace("\n", ""))
                 self.feeder_number = int(lines[1].replace("\n", ""))
@@ -46,12 +48,15 @@ class Experiment:
             sleep(.2)
         return
         
-    def episode_started(self, m):
+    def episode_started(self, exp_name):
+        self.exp_name = exp_name
         print('EXP COMMAND: start episode')
+        print(exp_name)
         if self.pi_name == 'maze1':
-            print('\topening_door2')
-            self.doors.open_door(2)
-            sleep(.2)
+            if 'R' not in self.exp_name.split('_')[-1]:
+                print('\topening_door2')
+                self.doors.open_door(2)
+                sleep(.2)
             print('\tclosing door 1')
             self.doors.close_door(1)
             sleep(.2)
@@ -86,6 +91,7 @@ class Experiment:
             print('\topening_door 0')
             self.doors.open_door(0)
             sleep(.2)
+            print('\tstarting feeder')
         return 
         
     def experiment_finished(self, m):
@@ -106,7 +112,7 @@ class Experiment:
             sleep(.2)
         return
 
-    def prey_entered_arena(self, m):
+    def prey_entered_arena(self):
         print('EXP COMMAND: prey entered arena')
         if self.pi_name == 'maze1':
             print('\tclosing door 2')

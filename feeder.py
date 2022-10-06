@@ -1,24 +1,29 @@
+import os
 from gpiozero import Button, LED
 from time import sleep
+import requests 
+from _thread import start_new_thread
+from os import path
+from tcp_messages import MessageServer, MessageClient, Message, Connection
 
 def feeder_process(feeder, experiment, client):
     feeder.active = False
     while True: #loops forever
         while not feeder.active:
             pass
-        print ("\tfeeder enabled")
+        print("\tfeeder enabled")
         while True: #wait until the mouse touches the feeder
-            if feeder.sensor.is_pressed:
+            if not feeder.sensor.is_pressed:
                 feeder.feed()
                 feeder.active = False
-                print ("\tfeeder disabled")
+                print("\tfeeder disabled")
                 feeder.report_feeder(client, experiment)
                 break
      
 class Feeder:
     def __init__(self, feed_time, feeder_number):
         self.feeding_time = feed_time #60ms
-        self.sensor = Button(22)
+        self.sensor = Button(17)
         self.number = feeder_number
         self.solenoid = LED(27)
         self.active = False
@@ -48,7 +53,7 @@ class Feeder:
                 client.start_episode(experiment.exp_name)
             else:
                 print('\tfinishing experiment')
-                experiment.experiment_finished()
+                experiment.experiment_finished(m = '')
         else:
             print('\tfinishing episode')
             client.finish_episode()
@@ -59,6 +64,7 @@ class Feeder:
         self.solenoid.on()
         sleep(feeding_time)
         self.solenoid.off()
+
 
     def cancel(self):
         self.active = False

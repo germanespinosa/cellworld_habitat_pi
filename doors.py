@@ -3,6 +3,7 @@ from time import sleep
 from os import path
 from gpiozero import Button
 from pi_messages import *
+import json
 
 class Doors:
     def __init__(self):
@@ -18,6 +19,7 @@ class Doors:
 
         self.kit = ServoKit(channels=16)
         self.load_calibration()
+        self.power = 0.75
 
         for dn in range(4):
             self.door_open.append(False)
@@ -35,7 +37,7 @@ class Doors:
             self.close_door(door)
 
     def open_door(self, door):
-        self.kit.continuous_servo[door].throttle = -.7 * self.directions[door] + self.neutral_values[door]
+        self.kit.continuous_servo[door].throttle = -1 * self.power * self.directions[door] + self.neutral_values[door]
         self.sensor_open[door].wait_for_press(3)
         if self.sensor_open[door].is_pressed:
             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -45,7 +47,7 @@ class Doors:
             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
 
     def close_door(self, door):
-        self.kit.continuous_servo[door].throttle = .7 * self.directions[door] + self.neutral_values[door]
+        self.kit.continuous_servo[door].throttle = self.power * self.directions[door] + self.neutral_values[door]
         self.sensor_close[door].wait_for_press(3)
         if self.sensor_close[door].is_pressed:
             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -54,14 +56,14 @@ class Doors:
         else:
             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
 
-    def door_feed(self, door, value):
+    def door_feed (self, door, value):
         self.kit.continuous_servo[door].throttle = 0.1 * self.directions[door] * value + self.neutral_values[door]
         sleep(.2)
         self.kit.continuous_servo[door].throttle = self.neutral_values[door]
         sleep(.2)
         return "fed %f to door %d" % (0.1 * self.directions[door] * value + self.neutral_values[door], door)
-
-    def test_door(self, door, repetitions):
+     
+    def test_door (self, door, repetitions):
         for i in range(repetitions):
             self.open_door(door)
             sleep(0.2)
@@ -69,14 +71,14 @@ class Doors:
             sleep(0.2)
 
     def no_move(self, door):
-        global neutral_values
-        self.kit.continuous_servo[door].throttle = self.neutral_values[door]
-        sleep(.2)
+      global neutral_values
+      self.kit.continuous_servo[door].throttle = self.neutral_values[door]
+      sleep(.2)
 
     def save_calibration(self):
         for dn in range(len(self.door_open)):
             if self.detected[dn]:
-                f = open("door%d.cal" % dn, "w")
+                f = open("/home/pi/maze_pi/door%d.cal" % dn, "w")
                 f.write(str(self.neutral_values[dn]))
                 f.write("\n")
                 f.write(str(self.directions[dn]))
@@ -91,7 +93,7 @@ class Doors:
                 f.write("\n")
                 f.close()
 
-    def calibrate(self, door_number, direction, opening_time, closing_time):
+    def calibrate(self, door):
         increment = -.005
         close_b = self.neutral_values[door]
         open_b = self.neutral_values[door]
@@ -99,7 +101,7 @@ class Doors:
             # Lower limit
             print("calibrating lower limit")
             # print("opening door")
-            self.kit.continuous_servo[door].throttle = -0.5 * self.directions[door] + self.neutral_values[door]
+            self.kit.continuous_servo[door].throttle = -1 * self.power * self.directions[door] + self.neutral_values[door]
             self.sensor_open[door].wait_for_press(3)
             if not self.sensor_open[door].is_pressed:
                 self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -122,7 +124,7 @@ class Doors:
                             continue
                         else:
                             # print('sensor not pressed, opening door')
-                            self.kit.continuous_servo[door].throttle = -0.5 * self.directions[door] + \
+                            self.kit.continuous_servo[door].throttle = -1 * self.power * self.directions[door] + \
                                                                        self.neutral_values[door]
                             self.sensor_open[door].wait_for_press()
                             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -136,7 +138,7 @@ class Doors:
                         print(close_b)
                         close_b = close_b + increment * self.directions[door]
                         # print('opening door')
-                        self.kit.continuous_servo[door].throttle = -0.5 * self.directions[door] + self.neutral_values[
+                        self.kit.continuous_servo[door].throttle = -1 * self.power * self.directions[door] + self.neutral_values[
                             door]
                         self.sensor_open[door].wait_for_press()
                         self.kit.continuous_servo[door].throttle = close_b
@@ -151,7 +153,7 @@ class Doors:
             sleep(3)
             print("Calibrating upper limit")
             # print("closing door")
-            self.kit.continuous_servo[door].throttle = 0.5 * self.directions[door] + self.neutral_values[door]
+            self.kit.continuous_servo[door].throttle = self.power * self.directions[door] + self.neutral_values[door]
             self.sensor_close[door].wait_for_press(3)
             if not self.sensor_close[door].is_pressed:
                 self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -174,7 +176,7 @@ class Doors:
                             continue
                         else:
                             # print('sensor not pressed, closing door')
-                            self.kit.continuous_servo[door].throttle = 0.5 * self.directions[door] + \
+                            self.kit.continuous_servo[door].throttle = self.power * self.directions[door] + \
                                                                        self.neutral_values[door]
                             self.sensor_close[door].wait_for_press()
                             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
@@ -188,7 +190,7 @@ class Doors:
                         print(open_b)
                         open_b = open_b - increment * self.directions[door]
                         # print('closing door')
-                        self.kit.continuous_servo[door].throttle = 0.5 * self.directions[door] + self.neutral_values[
+                        self.kit.continuous_servo[door].throttle = self.power * self.directions[door] + self.neutral_values[
                             door]
                         self.sensor_close[door].wait_for_press()
                         self.kit.continuous_servo[door].throttle = open_b
@@ -209,13 +211,14 @@ class Doors:
             # print(f'average = {average}')
             self.neutral_values[door] = average
             self.kit.continuous_servo[door].throttle = self.neutral_values[door]
+        print('calibration complete')
         return
 
     def status(self):
         status = DoorInfoList()
         for dn in range(4):
             if self.detected[dn]:
-                door_status = DoorInfo(num=dn, state="open" if self.door_open[dn] else "closed")
+                door_status = DoorInfo(num = dn, state = "open" if self.door_open[dn] else "closed")
                 status.append(door_status)
         return status
 
@@ -241,3 +244,4 @@ class Doors:
                 self.open_sensor_pin.append('')
                 self.close_sensor_pin.append('')
                 self.detected.append(False)
+                
