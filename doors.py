@@ -78,7 +78,7 @@ class Doors:
     def save_calibration(self):
         for dn in range(len(self.door_open)):
             if self.detected[dn]:
-                f = open("/home/pi/maze_pi/door%d.cal" % dn, "w")
+                f = open("/home/pi/cellworld_habitat_pi/door%d.cal" % dn, "w")
                 f.write(str(self.neutral_values[dn]))
                 f.write("\n")
                 f.write(str(self.directions[dn]))
@@ -226,7 +226,7 @@ class Doors:
         self.opening_time = []
         self.closing_time = []
         for dn in range(4):
-            cal_file_name = "/home/pi/maze_pi/door%d.cal" % dn
+            cal_file_name = "/home/pi/cellworld_habitat_pi/door%d.cal" % dn
             if path.exists(cal_file_name):
                 lines = open(cal_file_name, "r").readlines()
                 self.neutral_values.append(float(lines[0].replace("\n", "")))
