@@ -112,7 +112,7 @@ class Experiment:
             sleep(.2)
         return
 
-    def prey_entered_arena(self):
+    def prey_entered_arena(self, m):
         print('EXP COMMAND: prey entered arena')
         if self.pi_name == 'maze1':
             print('\tclosing door 2')
