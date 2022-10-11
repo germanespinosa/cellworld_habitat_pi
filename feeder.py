@@ -23,7 +23,7 @@ def feeder_process(feeder, experiment, client):
 class Feeder:
     def __init__(self, feed_time, feeder_number):
         self.feeding_time = feed_time #60ms
-        self.sensor = Button(17)
+        self.sensor = Button(22)
         self.number = feeder_number
         self.solenoid = LED(27)
         self.active = False
@@ -49,8 +49,8 @@ class Feeder:
     def report_feeder(self, client, experiment):
         if experiment.pi_name == 'maze1':
             if client.is_active(experiment.exp_name):
-                print('\tstarting episode')
-                client.start_episode(experiment.exp_name)
+                print(f'\tstarting episode: {experiment.exp_name}')
+                print(client.start_episode(experiment.exp_name))
             else:
                 print('\tfinishing experiment')
                 experiment.experiment_finished(m = '')
