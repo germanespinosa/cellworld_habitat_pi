@@ -43,8 +43,6 @@ class Doors:
                 self.motor_open[dn].start(0)  # start PWM of required Duty Cycle
                 self.motor_close[dn].start(0)
 
-        print(self.open_pwm_pin)
-
     def open_door(self,door):
         if self.detected[door]:
             self.motor_open[door].ChangeDutyCycle(75)

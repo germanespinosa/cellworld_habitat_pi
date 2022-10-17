@@ -6,7 +6,7 @@ from _thread import start_new_thread
 from os import path
 from tcp_messages import MessageServer, MessageClient, Message, Connection
 
-def feeder_process(feeder, experiment, client):
+def feeder_process(feeder, experiment):
     feeder.active = False
     while True: #loops forever
         while not feeder.active:
@@ -17,7 +17,7 @@ def feeder_process(feeder, experiment, client):
                 feeder.feed()
                 feeder.active = False
                 print("\tfeeder disabled")
-                feeder.report_feeder(client, experiment)
+                feeder.report_feeder(experiment)
                 break
      
 class Feeder:
@@ -46,17 +46,20 @@ class Feeder:
             f.write(str(self.feeding_time) + "\n")
             f.write(str(self.number) + "\n")
             
-    def report_feeder(self, client, experiment):
+    def report_feeder(self, experiment):
         if experiment.pi_name == 'maze1':
-            if client.is_active(experiment.exp_name):
+            if not experiment.active_exp_name == experiment.exp_name:
+                print(f'\t active experiment still running, finishing active experiment: {experiment.active_exp_name}')
+                experiment.client.finish_experiment(experiment.active_exp_name)
+            if experiment.client.is_active(experiment.exp_name):
                 print(f'\tstarting episode: {experiment.exp_name}')
-                print(client.start_episode(experiment.exp_name))
+                print(experiment.client.start_episode(experiment.exp_name))
             else:
-                print('\tfinishing experiment')
-                experiment.experiment_finished(m = '')
+                print(f'\tfinishing experiment: {experiment.exp_name}')
+                experiment.experiment_finished(experiment.exp_name)
         else:
-            print('\tfinishing episode')
-            client.finish_episode()
+            print(f'\tfinishing episode: {experiment.active_exp_name}')
+            experiment.client.finish_episode()
             
     def feed(self, feeding_time=None):
         if feeding_time is None:
@@ -64,7 +67,6 @@ class Feeder:
         self.solenoid.on()
         sleep(feeding_time)
         self.solenoid.off()
-
 
     def cancel(self):
         self.active = False
