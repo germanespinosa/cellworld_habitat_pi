@@ -52,7 +52,7 @@ class Feeder:
                 experiment.client.finish_experiment(experiment.active_exp_name)
             if experiment.client.is_active(experiment.exp_name):
                 print(f'\tstarting episode: {experiment.exp_name}')
-                print(experiment.client.start_episode(experiment.exp_name))
+                experiment.client.start_episode(experiment.exp_name)
             else:
                 print(f'\tfinishing experiment: {experiment.exp_name}')
                 experiment.experiment_finished(experiment.exp_name)
