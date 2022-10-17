@@ -51,9 +51,10 @@ class Experiment:
                 sleep(.2)
                 self.feeders.active = False
         else:
-            print('EPISODE IS STILL ACTIVE')
-            print(f'Finishing episode for {self.active_exp_name}')
-            self.client.finish_episode()
+            if self.pi_name == 'maze2':
+                print('EPISODE IS STILL ACTIVE')
+                print(f'Finishing episode for {self.active_exp_name}')
+                self.client.finish_episode()
         return
         
     def episode_started(self, exp_name):
