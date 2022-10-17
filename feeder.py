@@ -48,7 +48,7 @@ class Feeder:
     def report_feeder(self, experiment):
         if experiment.pi_name == 'maze1':
             if experiment.active_exp_name != experiment.exp_name and experiment.active_exp_name != '':
-                print(f'\t active experiment still running, finishing active experiment: {experiment.active_exp_name}')
+                print(f'\tActive experiment still running. Finishing active experiment: {experiment.active_exp_name}')
                 experiment.client.finish_experiment(experiment.active_exp_name)
             if experiment.client.is_active(experiment.exp_name):
                 print(f'\tstarting episode: {experiment.exp_name}')

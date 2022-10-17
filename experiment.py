@@ -30,7 +30,7 @@ class Experiment:
     def experiment_started(self, parameters):
         print('EXP COMMAND: start experiment')
         self.exp_name = parameters.experiment_name
-        print(self.exp_name)
+        print(f'\t{self.exp_name}')
         if not self.ep_active:
             if self.pi_name == 'maze1':
                 print('\tclosingdoor1')
@@ -53,7 +53,7 @@ class Experiment:
         else:
             if self.pi_name == 'maze2':
                 print('EPISODE IS STILL ACTIVE')
-                print(f'Finishing episode for {self.active_exp_name}')
+                print(f'\tFinishing episode for {self.active_exp_name}')
                 self.client.finish_episode()
         return
         
@@ -61,7 +61,7 @@ class Experiment:
         self.ep_active = True
         self.active_exp_name = exp_name
         print('EXP COMMAND: start episode')
-        print(exp_name)
+        print(f'\t{exp_name}')
         if self.pi_name == 'maze1':
             if 'R' not in self.exp_name.split('_')[-1]:
                 print('\topening_door2')
@@ -86,7 +86,7 @@ class Experiment:
         print('EXP COMMAND: finish episode')
         self.ep_active = False
         self.active_exp_name = exp_name
-        print(self.exp_name)
+        print(f'\t{exp_name}')
         if self.pi_name == 'maze1':
             print('\topening_door')
             self.doors.open_door(1)
@@ -109,7 +109,7 @@ class Experiment:
         
     def experiment_finished(self, exp_name):
         print('EXP COMMAND: finish experiment')
-        print(exp_name)
+        print(f'\t{exp_name}')
         if self.pi_name == 'maze1':
             print('\tclosing door 1')
             self.doors.close_door(1)
