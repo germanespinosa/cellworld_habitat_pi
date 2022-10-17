@@ -12,14 +12,13 @@ def feeder_process(feeder, experiment):
         while not feeder.active:
             pass
         print("\tfeeder enabled")
-        while True: #wait until the mouse touches the feeder
+        while feeder.active: #wait until the mouse touches the feeder
             if not feeder.sensor.is_pressed:
                 feeder.feed()
                 feeder.active = False
-                print("\tfeeder disabled")
                 feeder.report_feeder(experiment)
                 break
-     
+        print("\tfeeder disabled")
 class Feeder:
     def __init__(self, feed_time, feeder_number):
         self.feeding_time = feed_time #60ms

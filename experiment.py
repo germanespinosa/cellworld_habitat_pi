@@ -31,7 +31,7 @@ class Experiment:
         print('EXP COMMAND: start experiment')
         self.exp_name = parameters.experiment_name
         print(self.exp_name)
-        if not self.active_ep:
+        if not self.ep_active:
             if self.pi_name == 'maze1':
                 print('\tclosingdoor1')
                 self.doors.close_door(1)
@@ -49,6 +49,7 @@ class Experiment:
                 print('\tclosing door3')
                 self.doors.close_door(3)
                 sleep(.2)
+                self.feeders.active = False
         else:
             print('EPISODE IS STILL ACTIVE')
             print(f'Finishing episode for {self.active_exp_name}')
@@ -68,6 +69,7 @@ class Experiment:
             print('\tclosing door 1')
             self.doors.close_door(1)
             sleep(.2)
+            self.feeders.active = False
         else:
             print('\tclosing door 0')
             self.doors.close_door(0)
@@ -101,6 +103,7 @@ class Experiment:
             self.doors.open_door(0)
             sleep(.2)
             print('\tstarting feeder')
+            self.feeders.active = False
         return 
         
     def experiment_finished(self, exp_name):
