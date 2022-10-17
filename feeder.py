@@ -17,8 +17,8 @@ def feeder_process(feeder, experiment):
                 feeder.feed()
                 feeder.active = False
                 feeder.report_feeder(experiment)
-                break
         print("\tfeeder disabled")
+
 class Feeder:
     def __init__(self, feed_time, feeder_number):
         self.feeding_time = feed_time #60ms
@@ -47,7 +47,7 @@ class Feeder:
             
     def report_feeder(self, experiment):
         if experiment.pi_name == 'maze1':
-            if not experiment.active_exp_name == experiment.exp_name:
+            if experiment.active_exp_name != experiment.exp_name and experiment.active_exp_name != '':
                 print(f'\t active experiment still running, finishing active experiment: {experiment.active_exp_name}')
                 experiment.client.finish_experiment(experiment.active_exp_name)
             if experiment.client.is_active(experiment.exp_name):
@@ -56,6 +56,7 @@ class Feeder:
             else:
                 print(f'\tfinishing experiment: {experiment.exp_name}')
                 experiment.experiment_finished(experiment.exp_name)
+                experiment.active_exp_name = ''
         else:
             print(f'\tfinishing episode: {experiment.active_exp_name}')
             experiment.client.finish_episode()
