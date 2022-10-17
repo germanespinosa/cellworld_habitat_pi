@@ -65,7 +65,7 @@ class PiService(MessageServer):
     def feeder_reached(self, feeder_num) -> str:
         if feeder_num == self.experiment.feeder_number:
             print(f"Activating feeder{feeder_num}")
-            self.experiment.feeders.report_feeder(self.client, self.experiment)
+            self.experiment.feeders.report_feeder(self.experiment)
         return f"Activating feeder{feeder_num}"
 
     def test_feeder(self, parameters: TestFeederResponse) -> str:

@@ -42,7 +42,6 @@ class Experiment:
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
-                print(self.exp_name)
                 print('\tclosingdoor0')
                 self.doors.close_door(0)
                 sleep(.2)
