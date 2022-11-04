@@ -11,7 +11,7 @@ def feeder_process(feeder, experiment):
     while True: #loops forever
         while not feeder.active:
             pass
-        print("\tfeeder enabled")
+        print(f'\tfeeder enabled, feeder.active = {feeder.active}')
         while feeder.active: #wait until the mouse touches the feeder
             if not feeder.sensor.is_pressed:
                 print("\tfeeder reached, giving water reward")
@@ -50,6 +50,7 @@ class Feeder:
             f.write(str(self.number) + "\n")
             
     def report_feeder(self, experiment):
+        print('\t Starting report_feeder')
         if experiment.pi_name == 'maze1':
             if experiment.active_exp_name != experiment.exp_name and experiment.active_exp_name != '':
                 print(f'\tActive experiment still running. Finishing active experiment: {experiment.active_exp_name}')
