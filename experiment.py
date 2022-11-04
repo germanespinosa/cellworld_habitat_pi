@@ -48,6 +48,7 @@ class Experiment:
                 print('\tclosing door3')
                 self.doors.close_door(3)
                 sleep(.2)
+                print('\tdisabling feeder')
                 self.feeders.active = False
         else:
             if self.pi_name == 'maze2':
@@ -69,6 +70,7 @@ class Experiment:
             print('\tclosing door 1')
             self.doors.close_door(1)
             sleep(.2)
+            print('\tdisabling feeder')
             self.feeders.active = False
         else:
             print('\tclosing door 0')
@@ -102,7 +104,7 @@ class Experiment:
             print('\topening_door 0')
             self.doors.open_door(0)
             sleep(.2)
-            print('\tstarting feeder')
+            print('\tdisabling feeder')
             self.feeders.active = False
         return 
         
@@ -124,4 +126,14 @@ class Experiment:
             print('\tclosing door 2')
             self.doors.close_door(2)
             sleep(.2)
+        return
+
+    def experiment_resumed(self, parameters):
+        print('EXP COMMAND: experiment resumed')
+        self.exp_name = parameters.experiment_name
+        print(f'\t{self.exp_name}')
+        if self.pi_name == 'maze1':
+            self.feeders.active = True
+        else:
+            self.feeders.active = False
         return

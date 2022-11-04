@@ -14,9 +14,13 @@ def feeder_process(feeder, experiment):
         print("\tfeeder enabled")
         while feeder.active: #wait until the mouse touches the feeder
             if not feeder.sensor.is_pressed:
+                print("\tfeeder reached, giving water reward")
                 feeder.feed()
                 feeder.active = False
-                feeder.report_feeder(experiment)
+                try:
+                    feeder.report_feeder(experiment)
+                except:
+                    print('ERROR: feeder.report_feeder not working')
         print("\tfeeder disabled")
 
 class Feeder:
