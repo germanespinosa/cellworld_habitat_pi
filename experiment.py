@@ -23,8 +23,8 @@ class Experiment:
                 self.feeder_number = int(lines[1].replace("\n", ""))
         self.doors = door.Doors()
         self.exp_name = ''
-        self.feeders = feeder.Feeder(self.feed_time,self.feeder_number)
-        self.feeder_thread = start_new_thread(feeder.feeder_process, (self.feeders, self))
+        self.feeders = feeder.Feeder(self.feed_time, self.feeder_number, self)
+        self.feeder_thread = start_new_thread(feeder.feeder_process, (self.feeders,))
         print('Experiment Initialized')
 
     def experiment_started(self, parameters):

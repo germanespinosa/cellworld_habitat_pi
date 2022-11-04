@@ -6,7 +6,7 @@ from _thread import start_new_thread
 from os import path
 from tcp_messages import MessageServer, MessageClient, Message, Connection
 
-def feeder_process(feeder, experiment):
+def feeder_process(feeder):
     feeder.active = False
     while True: #loops forever
         while not feeder.active:
@@ -18,19 +18,20 @@ def feeder_process(feeder, experiment):
                 feeder.feed()
                 feeder.active = False
                 try:
-                    feeder.report_feeder(experiment)
+                    feeder.report_feeder()
                 except:
                     print('ERROR: feeder.report_feeder not working')
         print("\tfeeder disabled")
 
 class Feeder:
-    def __init__(self, feed_time, feeder_number):
+    def __init__(self, feed_time, feeder_number, experiment):
         self.feeding_time = feed_time #60ms
         self.sensor = Button(22)
         self.number = feeder_number
         self.solenoid = LED(27)
         self.active = False
         self.finish = False
+        self.experiment = experiment
         # if not self.sensor.is_pressed:
             # self.sensor = Button(22)
             # self.number = 2
@@ -49,22 +50,22 @@ class Feeder:
             f.write(str(self.feeding_time) + "\n")
             f.write(str(self.number) + "\n")
             
-    def report_feeder(self, experiment):
+    def report_feeder(self):
         print('\t Starting report_feeder')
-        if experiment.pi_name == 'maze1':
-            if experiment.active_exp_name != experiment.exp_name and experiment.active_exp_name != '':
+        if self.experiment.pi_name == 'maze1':
+            if self.experiment.active_exp_name != self.experiment.exp_name and self.experiment.active_exp_name != '':
                 print(f'\tActive experiment still running. Finishing active experiment: {experiment.active_exp_name}')
-                experiment.client.finish_experiment(experiment.active_exp_name)
-            if experiment.client.is_active(experiment.exp_name):
-                print(f'\tstarting episode: {experiment.exp_name}')
-                experiment.client.start_episode(experiment.exp_name)
+                self.experiment.client.finish_experiment(self.experiment.active_exp_name)
+            if self.experiment.client.is_active(self.experiment.exp_name):
+                print(f'\tstarting episode: {self.experiment.exp_name}')
+                self.experiment.client.start_episode(self.experiment.exp_name)
             else:
-                print(f'\tfinishing experiment: {experiment.exp_name}')
-                experiment.experiment_finished(experiment.exp_name)
-                experiment.active_exp_name = ''
+                print(f'\tfinishing experiment: {self.experiment.exp_name}')
+                self.experiment.experiment_finished(self.experiment.exp_name)
+                self.experiment.active_exp_name = ''
         else:
-            print(f'\tfinishing episode: {experiment.active_exp_name}')
-            experiment.client.finish_episode()
+            print(f'\tfinishing episode: {self.experiment.active_exp_name}')
+            self.experiment.client.finish_episode()
             
     def feed(self, feeding_time=None):
         if feeding_time is None:
