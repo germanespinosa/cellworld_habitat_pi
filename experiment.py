@@ -53,12 +53,12 @@ class Experiment:
         print('EXP COMMAND: start episode')
         print(exp_name)
         if self.pi_name == 'maze1':
+            print('\tclosing door 1')
+            self.doors.close_door(1)
             if 'R' not in self.exp_name.split('_')[-1]:
                 print('\topening_door2')
                 self.doors.open_door(2)
                 sleep(.2)
-            print('\tclosing door 1')
-            self.doors.close_door(1)
             sleep(.2)
         else:
             print('\tclosing door 0')
