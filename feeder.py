@@ -62,6 +62,7 @@ class Feeder:
             else:
                 print(f'\tfinishing experiment: {self.experiment.exp_name}')
                 self.experiment.experiment_finished(self.experiment.exp_name)
+                self.experiment.client.finish_experiment(self.experiment.exp_name)
                 self.experiment.active_exp_name = ''
         else:
             print(f'\tfinishing episode: {self.experiment.active_exp_name}')
