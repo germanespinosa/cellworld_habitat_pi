@@ -16,6 +16,7 @@ class Experiment:
         self.ep_active = False
         self.active_exp_name = ''
         self.client = client
+        self.ep_count = 0
         if path.exists("/home/pi/cellworld_habitat_pi/feeder.cal"):
             with open("/home/pi/cellworld_habitat_pi/feeder.cal", "r") as f:
                 lines = f.readlines()
@@ -70,15 +71,15 @@ class Experiment:
         self.ep_active = False
         self.active_exp_name = exp_name
         print(f'\t{exp_name}')
-        if self.pi_name == 'maze1':
-            print('\tclosing door')
-            self.doors.close_door(2)
-            sleep(.2)
-            print('\tstarting feeder')
-            self.feeders.active = True
-        else:
-            print('\tdisabling feeder')
-            self.feeders.active = False
+        # if self.pi_name == 'maze1':
+        #     print('\tclosing door')
+        #     self.doors.close_door(2)
+        #     sleep(.2)
+        #     print('\tstarting feeder')
+        #     self.feeders.active = True
+        # else:
+        #     print('\tdisabling feeder')
+        #     self.feeders.active = False
         return 
         
     def experiment_finished(self, exp_name):
@@ -96,6 +97,7 @@ class Experiment:
             print('\tclosing door 2')
             self.doors.close_door(2)
             sleep(.2)
+            self.feeders.active = True
         return
 
     def experiment_resumed(self, parameters):
