@@ -1,3 +1,4 @@
+import matplotlib.pyplot
 import doors as door
 import feeder
 from experiment import Experiment
