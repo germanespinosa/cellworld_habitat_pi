@@ -1,4 +1,6 @@
 import os
+
+import cellworld
 from gpiozero import Button, LED
 from time import sleep
 from cellworld_experiment_service import StartEpisodeRequest
@@ -59,7 +61,7 @@ class Feeder:
                 self.experiment.client.finish_experiment(self.experiment.active_exp_name)
             if self.experiment.client.is_active(self.experiment.exp_name):
                 print(f'\tstarting episode: {self.experiment.exp_name}')
-                self.experiment.client.start_episode(StartEpisodeRequest(experiment_name = self.experiment.exp_name))
+                self.experiment.client.start_episode(experiment_name = self.experiment.exp_name, rewards_sequence = cellworld.Cell_group_builder())
             else:
                 print(f'\tfinishing experiment: {self.experiment.exp_name}')
                 self.experiment.experiment_finished(self.experiment.exp_name)
