@@ -59,9 +59,9 @@ class Experiment:
         
     def episode_started(self, parameters):
         self.ep_active = True
-        self.active_exp_name = parameters.exp_name
+        self.active_exp_name = parameters.experiment_name
         print('EXP COMMAND: start episode')
-        print(f'\t{parameters.exp_name}')
+        print(f'\t{parameters.experiment_name}')
         if self.pi_name == 'maze1':
             print('\tclosing door 1')
             self.doors.close_door(1)
