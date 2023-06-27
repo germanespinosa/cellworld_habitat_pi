@@ -1,6 +1,7 @@
 import os
 from gpiozero import Button, LED
 from time import sleep
+from sequence import Sequence
 import requests 
 from _thread import start_new_thread
 from os import path
@@ -32,6 +33,7 @@ class Feeder:
         self.active = False
         self.finish = False
         self.experiment = experiment
+        self.sequence = Sequence()
         # if not self.sensor.is_pressed:
             # self.sensor = Button(22)
             # self.number = 2
@@ -61,16 +63,20 @@ class Feeder:
                     print(f'\tfinishing episode: {self.experiment.active_exp_name}')
                     self.experiment.client.finish_episode()
                     sleep(.2)
+                print(f'\tgenerating sequence: {self.experiment.reward_cells}')
+                rewards_sequence = self.sequence.rand_no_consec_rep(self.experiment.reward_cells)
                 print(f'\tstarting episode: {self.experiment.exp_name}')
-                self.experiment.client.start_episode(self.experiment.exp_name)
+                self.experiment.client.start_episode(self.experiment.exp_name, rewards_sequence)
             else:
                 print(f'\tfinishing experiment: {self.experiment.exp_name}')
                 self.experiment.experiment_finished(self.experiment.exp_name)
                 self.experiment.client.finish_experiment(self.experiment.exp_name)
                 self.experiment.active_exp_name = ''
-        # else:
-        #     print(f'\tfinishing episode: {self.experiment.active_exp_name}')
-        #     self.experiment.client.finish_episode()
+        else:
+            print(f'\treward reached')
+            self.experiment.client.reward_reached()
+            # print(f'\tfinishing episode: {self.experiment.active_exp_name}')
+            # self.experiment.client.finish_episode()
             
     def feed(self, feeding_time=None):
         if feeding_time is None:

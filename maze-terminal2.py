@@ -29,6 +29,7 @@ client.on_experiment_started = experiment.experiment_started
 client.on_episode_finished = experiment.episode_finished
 client.on_prey_entered_arena = experiment.prey_entered_arena
 client.on_experiment_resumed = experiment.experiment_resumed
+client.on_reward_reached = experiment.reward_reached
 print('starting server')
 service.start()
 print("service running\n-------------------------")
