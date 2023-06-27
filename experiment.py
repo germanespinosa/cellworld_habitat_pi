@@ -49,7 +49,7 @@ class Experiment:
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
-                self.cell_id = self.reward_cells[self.feeder_number - 300]
+                self.cell_id = self.reward_cells[self.feeder_number - 200]
                 print('\tdisabling feeder')
                 self.feeders.active = False
         else:
