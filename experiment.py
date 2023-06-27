@@ -60,11 +60,13 @@ class Experiment:
         return
         
     def episode_started(self, parameters):
+        print('EXP COMMAND: start episode')
         self.ep_active = True
         self.active_exp_name = parameters.experiment_name
+        print(self.active_exp_name)
         self.reward_sequence = parameters.rewards_sequence
+        print(self.reward_sequence)
         self.reward_index = 0
-        print('EXP COMMAND: start episode')
         print(f'\t{parameters.experiment_name}')
         if self.pi_name == 'maze1':
             if 'R' not in self.exp_name.split('_')[-1]:
@@ -82,7 +84,9 @@ class Experiment:
         return 
 
     def reward_reached(self):
+        print('EXP COMMAND: reward_reached')
         self.reward_index += 1
+        print(self.reward_index)
         if self.reward_index > len(self.reward_sequence):
             if self.pi_name == 'maze1':
                 print('\topening_door2')
@@ -90,6 +94,8 @@ class Experiment:
                 print('\tstarting feeder')
                 self.feeders.active = True
         else:
+            print(self.cell_id)
+            print(self.reward_sequence[self.reward_index])
             if self.reward_sequence[self.reward_index] == self.cell_id:
                 print('\tstarting feeder')
                 self.feeders.active = True
