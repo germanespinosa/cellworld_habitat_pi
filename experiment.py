@@ -20,8 +20,8 @@ class Experiment:
 
         self.feed_time = 0
         self.feeder_number = 0
-        if path.exists("/home/pi/cellworld_habitat_pi/feeder.cal"):
-            with open("/home/pi/cellworld_habitat_pi/feeder.cal", "r") as f:
+        if path.exists("/home/pi/oasis_pi/feeder.cal"):
+            with open("/home/pi/oasis_pi/feeder.cal", "r") as f:
                 lines = f.readlines()
                 self.feed_time = float(lines[0].replace("\n", ""))
                 self.feeder_number = int(lines[1].replace("\n", ""))
