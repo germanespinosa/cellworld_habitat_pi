@@ -88,7 +88,7 @@ class Experiment:
     def reward_reached(self):
         print('EXP COMMAND: reward_reached')
         self.reward_index += 1
-        print(f'\tcurrent sequence index: {self.reward_index}')
+        print(f'\tcurrent sequence index: {self.reward_index} / {len(self.reward_sequence)-1}')
         print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
         if self.reward_index >= len(self.reward_sequence):
             print(f'\tlast reward reached')
