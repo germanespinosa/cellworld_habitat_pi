@@ -41,6 +41,7 @@ class Experiment:
         self.exp_name = parameters.experiment_name
         self.reward_cells = parameters.rewards_cells
         print(f'\t{self.exp_name}')
+        print(f'\treward_cells: {self.reward_cells}')
         if not self.ep_active:
             if self.pi_name == 'maze1':
                 print('\tclosing door2')
@@ -49,10 +50,8 @@ class Experiment:
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
-                print(self.feeder_number)
-                print(self.feeder_number - 200)
-                print(self.reward_cells[self.feeder_number - 200])
                 self.cell_id = self.reward_cells[self.feeder_number - 200]
+                print(f'\tcell_id: {self.cell_id}')
                 print('\tdisabling feeder')
                 self.feeders.active = False
         else:
@@ -66,11 +65,10 @@ class Experiment:
         print('EXP COMMAND: start episode')
         self.ep_active = True
         self.active_exp_name = parameters.experiment_name
-        print(self.active_exp_name)
+        print(f'\t{self.active_exp_name}')
         self.reward_sequence = parameters.rewards_sequence
-        print(self.reward_sequence)
+        print(f'\t{self.reward_sequence}')
         self.reward_index = 0
-        print(f'\t{parameters.experiment_name}')
         if self.pi_name == 'maze1':
             if 'R' not in self.exp_name.split('_')[-1]:
                 print('\topening_door2')
@@ -83,41 +81,36 @@ class Experiment:
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
+                print('\tdisabling feeder')
                 self.feeders.active = False
         return 
 
     def reward_reached(self):
         print('EXP COMMAND: reward_reached')
         self.reward_index += 1
-        print(self.reward_index)
+        print(f'\tcurrent sequence index: {self.reward_index}')
+        print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
         if self.reward_index >= len(self.reward_sequence):
             if self.pi_name == 'maze1':
                 print('\topening_door2')
                 self.doors.open_door(2)
                 print('\tstarting feeder')
                 self.feeders.active = True
+            else:
+                print('\tdisabling feeder')
+                self.feeders.active = False
         else:
-            print(self.cell_id)
-            print(self.reward_sequence[self.reward_index])
             if self.reward_sequence[self.reward_index] == self.cell_id:
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
+                print('\tdisabling feeder')
                 self.feeders.active = False
     def episode_finished(self, exp_name):
         print('EXP COMMAND: finish episode')
         self.ep_active = False
         self.active_exp_name = exp_name
         print(f'\t{exp_name}')
-        # if self.pi_name == 'maze1':
-        #     print('\tclosing door')
-        #     self.doors.close_door(2)
-        #     sleep(.2)
-        #     print('\tstarting feeder')
-        #     self.feeders.active = True
-        # else:
-        #     print('\tdisabling feeder')
-        #     self.feeders.active = False
         return 
         
     def experiment_finished(self, exp_name):
