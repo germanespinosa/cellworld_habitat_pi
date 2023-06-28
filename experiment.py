@@ -51,7 +51,7 @@ class Experiment:
                 self.feeders.active = True
             else:
                 self.cell_id = self.reward_cells[self.feeder_number - 200]
-                print(f'\tcell_id: {self.cell_id}')
+                print(f'\tMY cell_id: {self.cell_id}')
                 print('\tdisabling feeder')
                 self.feeders.active = False
         else:
@@ -78,11 +78,12 @@ class Experiment:
             self.feeders.active = False
         else:
             print(f'\tcurrent sequence index: {self.reward_index} / {len(self.reward_sequence) - 1}')
-            print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
             if self.reward_sequence[self.reward_index] == self.cell_id:
+                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
+                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
                 print('\tdisabling feeder')
                 self.feeders.active = False
         return 
@@ -91,7 +92,6 @@ class Experiment:
         print('EXP COMMAND: reward_reached')
         self.reward_index += 1
         print(f'\tcurrent sequence index: {self.reward_index} / {len(self.reward_sequence)-1}')
-        print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
         if self.reward_index >= len(self.reward_sequence):
             print(f'\tlast reward reached')
             if self.pi_name == 'maze1':
@@ -104,9 +104,11 @@ class Experiment:
                 self.feeders.active = False
         else:
             if self.reward_sequence[self.reward_index] == self.cell_id:
+                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
+                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
                 print('\tdisabling feeder')
                 self.feeders.active = False
     def episode_finished(self, exp_name):
