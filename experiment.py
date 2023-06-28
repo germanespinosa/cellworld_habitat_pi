@@ -91,6 +91,7 @@ class Experiment:
         print(f'\tcurrent sequence index: {self.reward_index}')
         print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
         if self.reward_index >= len(self.reward_sequence):
+            print(f'\tlast reward reached')
             if self.pi_name == 'maze1':
                 print('\topening_door2')
                 self.doors.open_door(2)
