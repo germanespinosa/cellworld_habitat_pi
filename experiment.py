@@ -77,6 +77,8 @@ class Experiment:
             print('\tdisabling feeder')
             self.feeders.active = False
         else:
+            print(f'\tcurrent sequence index: {self.reward_index} / {len(self.reward_sequence) - 1}')
+            print(f'\tcurrent cell_id: {self.reward_sequence[self.reward_index]}')
             if self.reward_sequence[self.reward_index] == self.cell_id:
                 print('\tstarting feeder')
                 self.feeders.active = True
