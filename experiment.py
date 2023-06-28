@@ -78,12 +78,13 @@ class Experiment:
             self.feeders.active = False
         else:
             print(f'\tcurrent sequence index: {self.reward_index} / {len(self.reward_sequence) - 1}')
+            current_cell_id = self.reward_sequence[self.reward_index]
             if self.reward_sequence[self.reward_index] == self.cell_id:
-                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
+                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]})')
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
-                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
+                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]})')
                 print('\tdisabling feeder')
                 self.feeders.active = False
         return 
@@ -104,11 +105,11 @@ class Experiment:
                 self.feeders.active = False
         else:
             if self.reward_sequence[self.reward_index] == self.cell_id:
-                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
+                print(f'\tMY cell_id ({self.cell_id}) == CURRENT cell_id ({self.reward_sequence[self.reward_index]})')
                 print('\tstarting feeder')
                 self.feeders.active = True
             else:
-                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]}))
+                print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]})')
                 print('\tdisabling feeder')
                 self.feeders.active = False
     def episode_finished(self, exp_name):
