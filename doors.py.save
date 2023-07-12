@@ -35,7 +35,6 @@ class Doors:
 				GPIO.setup(self.step_pin[dn], GPIO.OUT)
 				GPIO.setup(self.direction_pin[dn], GPIO.OUT)
 				GPIO.setup(self.sleep_pin[dn], GPIO.OUT)
-				GPIO.output(self.sleep_pin[dn], GPIO.HIGH)
 				self.motor_open.append(GPIO.PWM(self.step_pin[dn], 1000))  # create PWM instance with frequency
 				self.sensor_open.append(Button(self.open_sensor_pin[dn], None, False))
 				self.sensor_close.append(Button(self.close_sensor_pin[dn], None, False))
@@ -96,7 +95,8 @@ class Doors:
 	   	 # change to sleep
 			self.motor_open[door].ChangeDutyCycle(0)
 			#self.motor_close[door].ChangeDutyCycle(self.neutral_values[door])
-			GPIO.output(self.sleep_pin[door], GPIO.HIGH)
+			GPIO.output(self.sleep_pin[door], GPIO.HIGH
+)
 			print('door loose stopped')
 
 	def save_calibration(self):

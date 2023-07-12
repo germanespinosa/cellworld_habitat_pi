@@ -36,7 +36,7 @@ print("service running\n-------------------------")
 #service.join()
 while service.running:
     print("connecting to client")
-    if not client.connect("192.168.137.228"):
+    if not client.connect("192.168.137.20"):
         sleep(5)
         continue
     print("client connected")

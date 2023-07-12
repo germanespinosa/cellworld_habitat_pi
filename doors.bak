@@ -5,150 +5,134 @@ from pi_messages import *
 import RPi.GPIO as GPIO
 
 class Doors:
-	def __init__(self):
-		GPIO.setwarnings(False)
-		GPIO.setmode(GPIO.BCM)
+    def __init__(self):
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
 
-		self.neutral_values = []
-		self.open_sensor_pin = []
-		self.close_sensor_pin = []
-		self.step_pin = []
-		self.direction_pin = []
-		self.sleep_pin = []
+        self.neutral_values = []
+        self.open_sensor_pin = []
+        self.close_sensor_pin = []
+        self.open_pwm_pin = []
+        self.close_pwm_pin = []
 
-		self.sensor_open = []
-		self.sensor_close = []
-		self.motor_open = []
+        self.sensor_open = []
+        self.sensor_close = []
+        self.motor_open = []
+        self.motor_close = []
 
-		self.door_open = []
-		self.detected = []
+        self.door_open = []
+        self.detected = []
 
-		self.load_calibration()
+        self.load_calibration()
 
-		for dn in range(4):
-			self.door_open.append(False)
-			if not self.detected[dn]:
-				self.sensor_open.append('')
-				self.sensor_close.append('')
-				self.motor_open.append('')
-			else:
-				GPIO.setup(self.step_pin[dn], GPIO.OUT)
-				GPIO.setup(self.direction_pin[dn], GPIO.OUT)
-				GPIO.setup(self.sleep_pin[dn], GPIO.OUT)
-				GPIO.output(self.sleep_pin[dn], GPIO.HIGH)
-				self.motor_open.append(GPIO.PWM(self.step_pin[dn], 1000))  # create PWM instance with frequency
-				self.sensor_open.append(Button(self.open_sensor_pin[dn], None, False))
-				self.sensor_close.append(Button(self.close_sensor_pin[dn], None, False))
+        for dn in range(4):
+            self.door_open.append(False)
+            if not self.detected[dn]:
+                self.sensor_open.append('')
+                self.sensor_close.append('')
+                self.motor_open.append('')
+                self.motor_close.append('')
+            else:
+                GPIO.setup(self.open_pwm_pin[dn], GPIO.OUT)
+                GPIO.setup(self.close_pwm_pin[dn], GPIO.OUT)
+                self.motor_open.append(GPIO.PWM(self.open_pwm_pin[dn], 1000))  # create PWM instance with frequency
+                self.motor_close.append(GPIO.PWM(self.close_pwm_pin[dn], 1000))  # create PWM instance with frequency
+                self.sensor_open.append(Button(self.open_sensor_pin[dn], None, False))
+                self.sensor_close.append(Button(self.close_sensor_pin[dn], None, False))
 
-				self.motor_open[dn].start(0)  # start PWM of required Duty Cycle
+                self.motor_open[dn].start(0)  # start PWM of required Duty Cycle
+                self.motor_close[dn].start(0)
 
-	def open_door(self,door):
-		if self.detected[door]:
-			# set direction to open
-#will need to figure out how to replace the 1 in sleep
-			GPIO.output(self.sleep_pin[door], GPIO.LOW)
-			GPIO.output(self.direction_pin[door], False)
-			self.motor_open[door].ChangeDutyCycle(75)
-			self.sensor_open[door].wait_for_press(3)
-			if self.sensor_open[door].is_pressed:
-				self.brake(door)
-				print('open door pressed')
-				self.door_open[door] = True
-			else:
-				self.brake(door)
-			sleep(0.5)
-	    	# change below to sleep function
-			self.loose_stop(door)
+    def open_door(self,door):
+        if self.detected[door]:
+            self.motor_open[door].ChangeDutyCycle(75)
+            self.sensor_open[door].wait_for_press(3)
+            if self.sensor_open[door].is_pressed:
+                self.brake(door)
+                self.door_open[door] = True
+            else:
+                self.brake(door)
+            sleep(0.5)
+            self.loose_stop(door)
 
-	def close_door(self, door):
-		if self.detected[door]:
-			#set direction to close
-			GPIO.output(self.sleep_pin[door], GPIO.LOW)
-			GPIO.output(self.direction_pin[door], True)
-			self.motor_open[door].ChangeDutyCycle(75)
-			self.sensor_close[door].wait_for_press(3)
-			if self.sensor_close[door].is_pressed:
-				self.brake(door)
-				print('close door pressed')
-				self.door_open[door] = False
-			else:
-				self.brake(door)
-			sleep(0.5)
-		#change below to sleep function
-			self.loose_stop(door)
+    def close_door(self, door):
+        if self.detected[door]:
+            self.motor_close[door].ChangeDutyCycle(75)
+            self.sensor_close[door].wait_for_press(3)
+            if self.sensor_close[door].is_pressed:
+                self.brake(door)
+                self.door_open[door] = False
+            else:
+                self.brake(door)
+            sleep(0.5)
+            self.loose_stop(door)
 
-	def test_door(self, door, repetitions):
-		if self.detected[door]:
-			for i in range(repetitions):
-				self.open_door(door)
-				sleep(0.2)
-				self.close_door(door)
-				sleep(0.2)
+    def test_door(self, door, repetitions):
+        if self.detected[door]:
+            for i in range(repetitions):
+                self.open_door(door)
+                sleep(0.2)
+                self.close_door(door)
+                sleep(0.2)
 
-	def brake(self, door):
-		if self.detected[door]:
-			self.motor_open[door].ChangeDutyCycle(100)
-			#self.motor_close[door].ChangeDutyCycle(100)
-			print('brake engaged')
+    def brake(self, door):
+        if self.detected[door]:
+            self.motor_open[door].ChangeDutyCycle(100)
+            self.motor_close[door].ChangeDutyCycle(100)
 
-	def loose_stop(self, door):
-		if self.detected[door]:
-	   	 # change to sleep
-			self.motor_open[door].ChangeDutyCycle(0)
-			#self.motor_close[door].ChangeDutyCycle(self.neutral_values[door])
-			GPIO.output(self.sleep_pin[door], GPIO.HIGH)
-			print('door loose stopped')
+    def loose_stop(self, door):
+        if self.detected[door]:
+            self.motor_open[door].ChangeDutyCycle(self.neutral_values[door])
+            self.motor_close[door].ChangeDutyCycle(self.neutral_values[door])
 
-	def save_calibration(self):
-		for dn in range(len(self.door_open)):
-			if self.detected[dn]:
-				f = open("door%d.cal" % dn, "w")
-				f.write(str(self.neutral_values[dn]))
-				f.write("\n")
-				f.write(str(self.open_sensor_pin[dn]))
-				f.write("\n")
-				f.write(str(self.close_sensor_pin[dn]))
-				f.write("\n")
-				f.write(str(self.step_pin[dn]))
-				f.write("\n")
-				f.write(str(self.direction_pin[dn]))
-				f.write("\n")
-				f.close()
+    def save_calibration(self):
+        for dn in range(len(self.door_open)):
+            if self.detected[dn]:
+                f = open("door%d.cal" % dn, "w")
+                f.write(str(self.neutral_values[dn]))
+                f.write("\n")
+                f.write(str(self.open_sensor_pin[dn]))
+                f.write("\n")
+                f.write(str(self.close_sensor_pin[dn]))
+                f.write("\n")
+                f.write(str(self.open_pwm_pin[dn]))
+                f.write("\n")
+                f.write(str(self.close_pwm_pin[dn]))
+                f.write("\n")
+                f.close()
 
-	def status(self):
-		status = DoorInfoList()
-		for dn in range(4):
-			if self.detected[dn]:
-                		# if self.sensor_close[dn].is_pressed:
-                		#     door_state = 'closed'
-                		# elif self.sensor_open[dn].is_pressed:
-                		#     door_state = 'closed'
-                		# else:
-                		#     door_state = 'unknown'
-				door_status = DoorInfo(num=dn, state='opened' if self.door_open[dn] else 'closed')
-				status.append(door_status)
-		return status
+    def status(self):
+        status = DoorInfoList()
+        for dn in range(4):
+            if self.detected[dn]:
+                # if self.sensor_close[dn].is_pressed:
+                #     door_state = 'closed'
+                # elif self.sensor_open[dn].is_pressed:
+                #     door_state = 'closed'
+                # else:
+                #     door_state = 'unknown'
+                door_status = DoorInfo(num=dn, state='opened' if self.door_open[dn] else 'closed')
+                status.append(door_status)
+        return status
 
-	def load_calibration(self):
-		for dn in range(4):
-			cal_file_name = "./door%d.cal" % dn
-			if path.exists(cal_file_name):
-				lines = open(cal_file_name, "r").readlines()
-				self.neutral_values.append(float(lines[0].replace("\n", "")))
-				self.open_sensor_pin.append(int(lines[1].replace("\n", "")))
-				self.close_sensor_pin.append(int(lines[2].replace("\n", "")))
-				self.step_pin.append(int(lines[3].replace("\n", "")))
-				self.direction_pin.append(int(lines[4].replace("\n", "")))
-				self.sleep_pin.append(int(lines[5].replace("\n","")))
-				self.detected.append(True)
-			else:
-				self.neutral_values.append(0)
-				self.open_sensor_pin.append('')
-				self.close_sensor_pin.append('')
-				self.step_pin.append('')
-				self.direction_pin.append('')
-				self.sleep_pin.append('')
-				self.detected.append(False)
+    def load_calibration(self):
+        for dn in range(4):
+            cal_file_name = "/home/pi/cellworld_habitat_pi/door%d.cal" % dn
+            if path.exists(cal_file_name):
+                lines = open(cal_file_name, "r").readlines()
+                self.neutral_values.append(float(lines[0].replace("\n", "")))
+                self.open_sensor_pin.append(int(lines[1].replace("\n", "")))
+                self.close_sensor_pin.append(int(lines[2].replace("\n", "")))
+                self.open_pwm_pin.append(int(lines[3].replace("\n", "")))
+                self.close_pwm_pin.append(int(lines[4].replace("\n", "")))
+                self.detected.append(True)
+            else:
+                self.neutral_values.append(0)
+                self.open_sensor_pin.append('')
+                self.close_sensor_pin.append('')
+                self.open_pwm_pin.append('')
+                self.close_pwm_pin.append('')
+                self.detected.append(False)
 
     # def calibrate(self, door_number, direction, opening_time, closing_time):
     #     increment = -.005
