@@ -47,7 +47,7 @@ class Doors:
 			# set direction to open
 #will need to figure out how to replace the 1 in sleep
 			GPIO.output(self.sleep_pin[door], GPIO.LOW)
-			GPIO.output(self.direction_pin[door], False)
+			GPIO.output(self.direction_pin[door], True)
 			self.motor_open[door].ChangeDutyCycle(75)
 			self.sensor_open[door].wait_for_press(3)
 			if self.sensor_open[door].is_pressed:
@@ -64,7 +64,7 @@ class Doors:
 		if self.detected[door]:
 			#set direction to close
 			GPIO.output(self.sleep_pin[door], GPIO.LOW)
-			GPIO.output(self.direction_pin[door], True)
+			GPIO.output(self.direction_pin[door], False)
 			self.motor_open[door].ChangeDutyCycle(75)
 			self.sensor_close[door].wait_for_press(3)
 			if self.sensor_close[door].is_pressed:
