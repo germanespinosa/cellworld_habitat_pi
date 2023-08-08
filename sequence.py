@@ -5,7 +5,7 @@ from json_cpp import JsonList
 
 class Sequence:
     def rand_no_consec_rep(self, reward_cells):
-        seq_len = 5
+        seq_len = 1
         reward_sequence = [0 for s in range(seq_len)]
         cell = random.choice(list(reward_cells))
         reward_sequence[0] = cell

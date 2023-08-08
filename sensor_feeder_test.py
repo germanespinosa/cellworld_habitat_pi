@@ -3,7 +3,7 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-delay = 25
+delay = 10
 input = 22
 output = 27
 GPIO.setmode(GPIO.BCM)
