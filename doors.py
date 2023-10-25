@@ -117,7 +117,7 @@ class Doors:
 
     def load_calibration(self):
         for dn in range(4):
-            cal_file_name = "/home/pi/cellworld_habitat_pi/door%d.cal" % dn
+            cal_file_name = "./door%d.cal" % dn
             if path.exists(cal_file_name):
                 lines = open(cal_file_name, "r").readlines()
                 self.neutral_values.append(float(lines[0].replace("\n", "")))
