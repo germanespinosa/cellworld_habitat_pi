@@ -16,7 +16,6 @@ class Experiment:
         self.ep_active = False
         self.active_exp_name = ''
         self.client = client
-        self.ep_count = 0
 
         self.feed_time = 0
         self.feeder_number = 0
@@ -39,6 +38,7 @@ class Experiment:
     def experiment_started(self, parameters):
         print('EXP COMMAND: start experiment')
         self.exp_name = parameters.experiment_name
+        self.ep_count = 0
         self.reward_cells = parameters.rewards_cells
         print(f'\t{self.exp_name}')
         print(f'\treward_cells: {self.reward_cells}')
@@ -62,7 +62,7 @@ class Experiment:
         return
         
     def episode_started(self, parameters):
-        print('EXP COMMAND: start episode')
+        print(f'EXP COMMAND: start episode {self.ep_count}')
         self.ep_active = True
         self.active_exp_name = parameters.experiment_name
         print(f'\t{self.active_exp_name}')
@@ -71,9 +71,10 @@ class Experiment:
         self.reward_index = 0
         if self.pi_name == 'maze1':
             if 'R' not in self.exp_name.split('_')[-1]:
-                print('\topening_door2')
-                self.doors.open_door(2)
-                sleep(.2)
+                if self.ep_count == 0:
+                    print('\topening_door2')
+                    self.doors.open_door(2)
+                    sleep(.2)
             print('\tdisabling feeder')
             self.feeders.active = False
         else:
@@ -113,11 +114,13 @@ class Experiment:
                 print(f'\tMY cell_id ({self.cell_id}) != CURRENT cell_id ({self.reward_sequence[self.reward_index]})')
                 print('\tdisabling feeder')
                 self.feeders.active = False
+
     def episode_finished(self, exp_name):
-        print('EXP COMMAND: finish episode')
+        print(f'EXP COMMAND: finish episode {self.ep_count}')
         self.ep_active = False
         self.active_exp_name = exp_name
         print(f'\t{exp_name}')
+        self.ep_count = self.ep_count + 1
         return 
         
     def experiment_finished(self, exp_name):

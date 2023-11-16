@@ -23,6 +23,8 @@ class Doors:
 		self.door_open = []
 		self.detected = []
 
+		self.door_opening = False
+		self.door_closing = False
 		self.load_calibration()
 
 		for dn in range(4):
@@ -43,7 +45,11 @@ class Doors:
 				self.motor_open[dn].start(0)  # start PWM of required Duty Cycle
 
 	def open_door(self,door):
+		while self.door_closing:
+			sleep(.05)
+			continue
 		if self.detected[door]:
+			self.door_opening = True
 			# set direction to open
 #will need to figure out how to replace the 1 in sleep
 			GPIO.output(self.sleep_pin[door], GPIO.LOW)
@@ -59,9 +65,14 @@ class Doors:
 			sleep(0.5)
 	    	# change below to sleep function
 			self.loose_stop(door)
+			self.door_opening = False
 
 	def close_door(self, door):
+		while self.door_opening:
+			sleep(.05)
+			continue
 		if self.detected[door]:
+			self.door_closing = True
 			#set direction to close
 			GPIO.output(self.sleep_pin[door], GPIO.LOW)
 			GPIO.output(self.direction_pin[door], False)
@@ -76,6 +87,7 @@ class Doors:
 			sleep(0.5)
 		#change below to sleep function
 			self.loose_stop(door)
+			self.door_closing = False
 
 	def test_door(self, door, repetitions):
 		if self.detected[door]:
