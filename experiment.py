@@ -38,13 +38,13 @@ class Experiment:
     def captured(self, parameters):
         print('EXP COMMAND: captured')
         if self.pi_name == 'maze1':
-	    print('\topening_door2')
-	    self.doors.open_door(2)
-	    print('\tstarting feeder')
-	    self.feeders.active = True
+            print('\topening_door2')
+            self.doors.open_door(2)
+            print('\tstarting feeder')
+            self.feeders.active = True
         else:
-	    print('\tdisabling feeder')
-	    self.feeders.active = False
+            print('\tdisabling feeder')
+            self.feeders.active = False
 
     def experiment_started(self, parameters):
         print('EXP COMMAND: start experiment')
