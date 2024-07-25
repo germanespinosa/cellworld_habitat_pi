@@ -34,6 +34,17 @@ class Experiment:
         self.feeders = feeder.Feeder(self.feed_time, self.feeder_number, self)
         self.feeder_thread = start_new_thread(feeder.feeder_process, (self.feeders,))
         print('Experiment Initialized')
+        
+    def captured(self, parameters):
+        print('EXP COMMAND: captured')
+        if self.pi_name == 'maze1':
+	    print('\topening_door2')
+	    self.doors.open_door(2)
+	    print('\tstarting feeder')
+	    self.feeders.active = True
+        else:
+	    print('\tdisabling feeder')
+	    self.feeders.active = False
 
     def experiment_started(self, parameters):
         print('EXP COMMAND: start experiment')

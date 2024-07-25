@@ -64,8 +64,6 @@ class Feeder:
                     print(f'\tfinishing episode: {self.experiment.active_exp_name}')
                     self.experiment.client.finish_episode()
                     sleep(.2)
-                print(f'\tgenerating sequence: {self.experiment.reward_cells}')
-                rewards_sequence = self.sequence.rand_no_consec_rep(self.experiment.reward_cells)
                 print(f'\tstarting episode: {self.experiment.exp_name}')
                 self.experiment.client.start_episode(self.experiment.exp_name, rewards_sequence)
             else:
@@ -77,11 +75,6 @@ class Feeder:
                 self.experiment.experiment_finished(self.experiment.exp_name)
                 self.experiment.client.finish_experiment(self.experiment.exp_name)
                 self.experiment.active_exp_name = ''
-        else:
-            print(f'\treward reached')
-            self.experiment.client.reward_reached()
-            # print(f'\tfinishing episode: {self.experiment.active_exp_name}')
-            # self.experiment.client.finish_episode()
             
     def feed(self, feeding_time=None):
         if feeding_time is None:
