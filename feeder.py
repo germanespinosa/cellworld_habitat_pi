@@ -20,8 +20,9 @@ def feeder_process(feeder):
                 feeder.active = False
                 try:
                     feeder.report_feeder()
-                except:
+                except Exception as ME:
                     print('ERROR: feeder.report_feeder not working')
+                    print(ME)
         print("\tfeeder disabled")
 
 class Feeder:
