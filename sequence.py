@@ -16,3 +16,6 @@ class Sequence:
             cell = random.choice(non_consec_list)
             reward_sequence[i+1] = cell
         return Cell_group_builder(JsonList(reward_sequence))
+
+    def empty(self):
+        return Cell_group_builder(JsonList())

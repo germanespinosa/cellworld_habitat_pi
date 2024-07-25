@@ -65,6 +65,7 @@ class Feeder:
                     self.experiment.client.finish_episode()
                     sleep(.2)
                 print(f'\tstarting episode: {self.experiment.exp_name}')
+                rewards_sequence = self.sequence.empty()
                 self.experiment.client.start_episode(self.experiment.exp_name, rewards_sequence)
             else:
                 if self.experiment.ep_active:
