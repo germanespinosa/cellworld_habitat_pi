@@ -11,7 +11,7 @@ class PiService(MessageServer):
         self.client = client
         self.router.add_route("open_door", self.open_door, int)
         self.router.add_route("close_door", self.close_door, int)
-        self.router.add_route("calibrate_door", self.calibrate_door, int)
+        # self.router.add_route("calibrate_door", self.calibrate_door, int)
         self.router.add_route("save_calibration", self.save_calibration)
         self.router.add_route("give_reward", self.give_reward, int)
         self.router.add_route("enable_feeder", self.enable_feeder, int)
@@ -40,9 +40,9 @@ class PiService(MessageServer):
         self.door_thread = start_new_thread(self.experiment.doors.test_door, (parameters.door_num, parameters.repetition))
         return f"tested door{parameters.door_num} {parameters.repetition} times"
 
-    def calibrate_door(self, door_num) -> str:
-        self.experiment.doors.calibrate_door(door_num)
-        return f"door{door_num} calibration finished"
+    # def calibrate_door(self, door_num) -> str:
+    #     self.experiment.doors.calibrate_door(door_num)
+    #     return f"door{door_num} calibration finished"
 
     def save_calibration(self, m) -> str:
         print("saving calibration")
@@ -65,7 +65,7 @@ class PiService(MessageServer):
     def feeder_reached(self, feeder_num) -> str:
         if feeder_num == self.experiment.feeder_number:
             print(f"Activating feeder{feeder_num}")
-            self.experiment.feeders.report_feeder(self.client, self.experiment)
+            self.experiment.feeders.report_feeder(self.experiment)
         return f"Activating feeder{feeder_num}"
 
     def test_feeder(self, parameters: TestFeederResponse) -> str:

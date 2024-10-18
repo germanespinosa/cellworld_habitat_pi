@@ -1,33 +1,39 @@
 import os
 from gpiozero import Button, LED
 from time import sleep
+from sequence import Sequence
 import requests 
 from _thread import start_new_thread
 from os import path
 from tcp_messages import MessageServer, MessageClient, Message, Connection
 
-def feeder_process(feeder, experiment, client):
+def feeder_process(feeder):
     feeder.active = False
     while True: #loops forever
         while not feeder.active:
             pass
-        print("\tfeeder enabled")
-        while True: #wait until the mouse touches the feeder
+        print(f'\tfeeder enabled, feeder.active = {feeder.active}')
+        while feeder.active: #wait until the mouse touches the feeder
             if not feeder.sensor.is_pressed:
+                print("\tfeeder reached, giving water reward")
                 feeder.feed()
                 feeder.active = False
-                print("\tfeeder disabled")
-                feeder.report_feeder(client, experiment)
-                break
-     
+                try:
+                    feeder.report_feeder()
+                except:
+                    print('ERROR: feeder.report_feeder not working')
+        print("\tfeeder disabled")
+
 class Feeder:
-    def __init__(self, feed_time, feeder_number):
+    def __init__(self, feed_time, feeder_number, experiment):
         self.feeding_time = feed_time #60ms
-        self.sensor = Button(17)
+        self.sensor = Button(22)
         self.number = feeder_number
         self.solenoid = LED(27)
         self.active = False
         self.finish = False
+        self.experiment = experiment
+        self.sequence = Sequence()
         # if not self.sensor.is_pressed:
             # self.sensor = Button(22)
             # self.number = 2
@@ -46,17 +52,35 @@ class Feeder:
             f.write(str(self.feeding_time) + "\n")
             f.write(str(self.number) + "\n")
             
-    def report_feeder(self, client, experiment):
-        if experiment.pi_name == 'maze1':
-            if client.is_active(experiment.exp_name):
-                print('\tstarting episode')
-                client.start_episode(experiment.exp_name)
+    def report_feeder(self):
+        print('\t Starting report_feeder')
+        if self.experiment.pi_name == 'maze1':
+            if self.experiment.active_exp_name != self.experiment.exp_name and self.experiment.active_exp_name != '':
+                print(f'\tActive experiment still running. Finishing active experiment: {self.experiment.active_exp_name}')
+                self.experiment.client.finish_experiment(self.experiment.active_exp_name)
+            if self.experiment.client.is_active(self.experiment.exp_name):
+                if self.experiment.ep_active:
+                    print(f'\tfinishing episode: {self.experiment.active_exp_name}')
+                    self.experiment.client.finish_episode()
+                    sleep(.2)
+                print(f'\tgenerating sequence: {self.experiment.reward_cells}')
+                rewards_sequence = self.sequence.rand_no_consec_rep(self.experiment.reward_cells)
+                print(f'\tstarting episode: {self.experiment.exp_name}')
+                self.experiment.client.start_episode(self.experiment.exp_name, rewards_sequence)
             else:
-                print('\tfinishing experiment')
-                experiment.experiment_finished(m = '')
+                if self.experiment.ep_active:
+                    print(f'\tfinishing episode: {self.experiment.active_exp_name}')
+                    self.experiment.client.finish_episode()
+                    sleep(.2)
+                print(f'\tfinishing experiment: {self.experiment.exp_name}')
+                self.experiment.experiment_finished(self.experiment.exp_name)
+                self.experiment.client.finish_experiment(self.experiment.exp_name)
+                self.experiment.active_exp_name = ''
         else:
-            print('\tfinishing episode')
-            client.finish_episode()
+            print(f'\treward reached')
+            self.experiment.client.reward_reached()
+            # print(f'\tfinishing episode: {self.experiment.active_exp_name}')
+            # self.experiment.client.finish_episode()
             
     def feed(self, feeding_time=None):
         if feeding_time is None:
@@ -64,7 +88,6 @@ class Feeder:
         self.solenoid.on()
         sleep(feeding_time)
         self.solenoid.off()
-
 
     def cancel(self):
         self.active = False

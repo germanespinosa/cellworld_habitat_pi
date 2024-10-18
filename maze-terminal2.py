@@ -12,7 +12,7 @@ from tcp_messages import Connection
 
 client = ExperimentClient()
 experiment = Experiment(client)
-service = PiService(experiment,client)
+service = PiService(experiment, client)
 
 # response = service.test_door(TestDoorResponse(1,3))
 # print(response)
@@ -28,13 +28,15 @@ client.on_episode_started = experiment.episode_started
 client.on_experiment_started = experiment.experiment_started
 client.on_episode_finished = experiment.episode_finished
 client.on_prey_entered_arena = experiment.prey_entered_arena
+client.on_experiment_resumed = experiment.experiment_resumed
+client.on_reward_reached = experiment.reward_reached
 print('starting server')
 service.start()
 print("service running\n-------------------------")
 #service.join()
 while service.running:
     print("connecting to client")
-    if not client.connect("192.168.137.225"):
+    if not client.connect("192.168.137.228"):
         sleep(5)
         continue
     print("client connected")
