@@ -23,8 +23,9 @@ class Feeder:
 		time.sleep(self.feed_time)
 		self.solenoid.off()
 
-	def state_loop(self, max_reward=0.3, reward_delay=1.0, delay=0.005):
+	def state_loop(self, max_reward=0.8, reward_delay=1.0, delay=0.005):
 		cnt = 0
+		print('Starting lickport training...')
 		while True:
 			current_time = time.time()
 			#print(self.sensor.is_pressed)
@@ -33,9 +34,9 @@ class Feeder:
 				self.feed()
 				self.time = time.time()
 				cnt = cnt + 1
-				print(f'{cnt * 0.002:0.3f}uL dispensed')
+				print(f'{cnt * 0.005:0.3f}mL dispensed')
 
-			if (cnt * 0.002) > max_reward:
+			if (cnt * 0.005) > max_reward:
 				print(f'max_reward ({max_reward}) reached... stopping.')
 				break
 			time.sleep(delay)
