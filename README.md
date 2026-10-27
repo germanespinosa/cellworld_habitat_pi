@@ -23,10 +23,11 @@
 
 ## Run Setup Script
 
-1. Pull the setup script from github.
+1. Remove the original oasis_pi directory and replace is with a fresh clone from github.
 
-        cd oasis_pi
-        git pull
+        rm -rf oasis_pi
+        git clone https://github.com/germanespinosa/cellworld_habitat_pi.git
+        mv cellworld_habitat_pi oasis_pi
         git checkout Oasis-Pi
    
 3. Update script permissions.
