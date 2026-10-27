@@ -28,7 +28,8 @@
         rm -rf oasis_pi
         git clone https://github.com/germanespinosa/cellworld_habitat_pi.git
         mv cellworld_habitat_pi oasis_pi
-        git checkout Oasis-Pi
+        cd oasis_pi
+        git checkout Oasis_Pi
    
 3. Update script permissions.
 
