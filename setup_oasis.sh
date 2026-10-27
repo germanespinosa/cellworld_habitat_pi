@@ -32,7 +32,7 @@ valid_ip "$IP" && valid_ip "$DESKTOP_IP" || {
 
 cd "$HOME/oasis_pi"
 
-[[ $(git branch --show-current) == Oasis_Pi ]] || {
+[[ $(git rev-parse --abbrev-ref HEAD) == Oasis_Pi ]] || {
     echo "Switch to the Oasis_Pi branch first."
     exit 1
 }
