@@ -4,12 +4,14 @@
 ## Table of Contents
 1. [Flash Image](#flash-image)
 2. [Initial SSH Connection](#initial-ssh-connection)
-3. [Configure IP Address](#configure-ip-address)
-4. [Configure Hostname](#configure-hostname)
-5. [SSH Key Setup](#ssh-key-setup)
-6. [Pull Latest Code](#pull-latest-code)
-7. [Configure Desktop IP](#configure-desktop-ip)
-8. [Configure Feeder](#configure-feeder)
+3. [Run Setup Script](#run-setup-script)
+4. [Manual Configuration](#manual-configuration)
+5. [Configure IP Address](#configure-ip-address)
+6. [Configure Hostname](#configure-hostname)
+7. [SSH Key Setup](#ssh-key-setup)
+8. [Pull Latest Code](#pull-latest-code)
+9. [Configure Desktop IP](#configure-desktop-ip)
+10. [Configure Feeder](#configure-feeder)
 
 ## Flash Image
 
@@ -25,7 +27,19 @@
 
    Password: `raspberry`
 
-## Configure IP Address
+## Run Setup Script
+
+1. Pull the setup script from github.
+
+        cd oasis_pi
+        git pull
+        git checkout Oasis-Pi
+2. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22)
+
+        setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
+
+## Manual Configuration
+### Configure IP Address
 
 1. Open the DHCP configuration file.
 
@@ -37,7 +51,7 @@
 
 3. Save and close the file.
 
-## Configure Hostname
+### Configure Hostname
 
 1. Open the hostname file.
 
@@ -49,7 +63,7 @@
 
         sudo reboot
 
-## SSH Key Setup
+### SSH Key Setup
 
 1. If you have not yet generated an SSH key on the desktop, generate one first, then continue to step 2. Otherwise, go straight to step 2.
 
@@ -63,7 +77,7 @@
 
 
 
-## Pull Latest Code
+### Pull Latest Code
 
 1. The oasis image should already contain a folder called `oasis_pi`. Navigate to it.
 
@@ -73,13 +87,13 @@
 
         git pull
 
-## Configure Desktop IP
+### Configure Desktop IP
 
 1. Open `maze-terminal2.py` and verify that the desktop IP address is set to `192.168.137.22`. If your desktop has a different IP address, update it accordingly.
 
         nano maze-terminal2.py
 
-## Configure Feeder
+### Configure Feeder
 
 1. Open the feeder calibration file.
 
