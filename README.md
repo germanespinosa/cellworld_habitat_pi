@@ -6,12 +6,6 @@
 2. [Initial SSH Connection](#initial-ssh-connection)
 3. [Run Setup Script](#run-setup-script)
 4. [Manual Configuration](#manual-configuration)
-5. [Configure IP Address](#configure-ip-address)
-6. [Configure Hostname](#configure-hostname)
-7. [SSH Key Setup](#ssh-key-setup)
-8. [Pull Latest Code](#pull-latest-code)
-9. [Configure Desktop IP](#configure-desktop-ip)
-10. [Configure Feeder](#configure-feeder)
 
 ## Flash Image
 
