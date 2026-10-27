@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 if grep -q $'\r$' "$0"; then sed -i 's/\r$//' "$0"; exec bash "$0" "$@"; fi # Fix Windows line endings
 
 # Usage: bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 # Run as your normal Pi user, without sudo.
 # Assumes ~/oasis_pi, dhcpcd, and one existing static IP setting.
 
-HOST=${1:?Usage: bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]}
+HOST=${1:?Usage: ./setup_oasis.sh HOSTNAME IP [DESKTOP_IP]}
 IP=${2:?Provide the target IP address}
 DESKTOP_IP=${3:-192.168.137.22}
 
