@@ -28,7 +28,12 @@
         cd oasis_pi
         git pull
         git checkout Oasis-Pi
-2. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22)
+   
+3. Update script permissions.
+
+        sudo chmod 777 setup_oasis.sh
+   
+5. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22)
 
         setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 
