@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+if grep -q $'\r$' "$0"; then sed -i 's/\r$//' "$0"; exec bash "$0" "$@"; fi # Fix Windows line endings
 
 # Usage: bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 # Run as your normal Pi user, without sudo.
