@@ -40,6 +40,9 @@
         bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 
 ## Manual Configuration
+
+This should only be necessary if the setup script failed for some reason!
+
 ### Configure IP Address
 
 1. Open the DHCP configuration file.
