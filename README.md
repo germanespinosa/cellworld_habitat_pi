@@ -36,7 +36,7 @@
    
 5. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22)
 
-        setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
+        bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 
 ## Manual Configuration
 ### Configure IP Address
