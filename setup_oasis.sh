@@ -52,7 +52,9 @@ COUNT=$(grep -Ec '^[[:space:]]*static[[:space:]]+ip_address=' \
 }
 
 sudo -v
-BACKUP=$(mktemp -d "$HOME/oasis-backup.XXXXXX")
+BACKUP_ROOT="$HOME/oasis_pi/backups"
+mkdir -p "$BACKUP_ROOT"
+BACKUP=$(mktemp -d "$BACKUP_ROOT/backup_$(date +%Y%m%d_%H%M%S)_XXXXXX")
 cp feeder.cal maze-terminal2.py "$BACKUP/"
 sudo cp /etc/dhcpcd.conf /etc/hostname /etc/hosts "$BACKUP/"
 echo "Backups: $BACKUP"
