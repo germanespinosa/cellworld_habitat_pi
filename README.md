@@ -9,34 +9,26 @@
 
 ## Flash Image
 
-1. Download the oasis201 image from the lab [google drive](https://drive.google.com/drive/u/0/folders/1BG0I_dm2JzCSMFcGO7WA8y0n1dVrUQpe).
+1. Download the oasis2_small image (recommended, oasis2 will also work but takes longer) from the lab [google drive](https://drive.google.com/drive/u/0/folders/1BG0I_dm2JzCSMFcGO7WA8y0n1dVrUQpe).
 
-2. Flash the oasis201 image to a 64GB SD card using Etcher or Win32 Disk Imager.
+2. Flash the oasis2_small image to a microSD card at least 8GB or larger using Etcher or Win32 Disk Imager (we typically use 64GB... need to test if the new smaller image works on smaller cards). Be patient, a large image can take ~1 hour to a 64GB card, the smaller image takes ~1 minute over USB3.
+
+3. Place the card in the Raspberry Pi **WITH THE POWER OFF** (inserting or removing the card with the power on can corrupt the drive!!!).
+
+4. Turn on the Pi. If using the smaller image it may need to power cycle a few times to expand the image, this can take a minute or two on a Pi Zero.
 
 ## Initial SSH Connection
 
-1. Connect to the new oasis via SSH using the default credentials.
+1. Connect to the new oasis via SSH.
 
-        ssh pi@192.168.137.201
+        ssh pi@192.168.137.2
 
    Password: `raspberry`
 
 ## Run Setup Script
+1. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22, but you should change it if the agent_tracker computer has a different IP)
 
-1. Remove the original oasis_pi directory and replace is with a fresh clone from github.
-
-        rm -rf oasis_pi
-        git clone https://github.com/germanespinosa/cellworld_habitat_pi.git
-        mv cellworld_habitat_pi oasis_pi
         cd oasis_pi
-        git checkout Oasis_Pi
-   
-3. Update script permissions.
-
-        sudo chmod 777 setup_oasis.sh
-   
-5. Run the setup script (replace HOSTNAME, IP, DESKTOP_IP with values for your oasis, eg. oasis209, 192.168.137.209, default DESKTOP_IP is 192.168.137.22)
-
         bash setup_oasis.sh HOSTNAME IP [DESKTOP_IP]
 
 ## Manual Configuration
