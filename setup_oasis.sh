@@ -52,7 +52,7 @@ COUNT=$(grep -Ec '^[[:space:]]*static[[:space:]]+ip_address=' \
 }
 
 sudo -v
-BACKUP_ROOT="$HOME/oasis_pi/backups"
+BACKUP_ROOT="$HOME/backups"
 mkdir -p "$BACKUP_ROOT"
 BACKUP=$(mktemp -d "$BACKUP_ROOT/backup_$(date +%Y%m%d_%H%M%S)_XXXXXX")
 cp feeder.cal maze-terminal2.py "$BACKUP/"
